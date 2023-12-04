@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
         }}
         className="text-center text-bg-dark auth-pages"
       >
-        <Header />
+      
         {children}
         <Footer />
       </body>

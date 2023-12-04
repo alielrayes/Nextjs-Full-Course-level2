@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
-const Header = () => {
+const Header = ({isSignPage=false, isRegisterPage=false}) => {
   return (
     <header id="headerElement" className="flex">
       <Link href={"/"} className="logo">
@@ -28,12 +28,7 @@ const Header = () => {
       </Link>
 
 
- 
-
-
-
-
-
+  
 
 
 
@@ -58,7 +53,7 @@ const Header = () => {
 
 
         <Link 
-        className="sign-in"
+        className={`sign-in ${isSignPage? "border" :  null}`}
          href="/signin">
           <FontAwesomeIcon
             className="fa-solid fa-right-to-bracket"
@@ -74,7 +69,7 @@ const Header = () => {
 
 
         <Link 
-        className="register " 
+        className={`register ${isRegisterPage? "border" : null}`} 
         href="/register">
           <FontAwesomeIcon
             className="fa-solid fa-user-plus"
