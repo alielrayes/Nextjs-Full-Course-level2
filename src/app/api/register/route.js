@@ -1,3 +1,4 @@
+import { connectMongoDB } from "app/DBconfig/mongoDB"
 import { NextResponse } from "next/server"
 
 
@@ -12,7 +13,7 @@ console.log("*******************************************")
 console.log(objFromFrontEnd)
 
 // 2- connect to DB
-
+await connectMongoDB()
 
 // 3- Try to Store obj to DB
 
