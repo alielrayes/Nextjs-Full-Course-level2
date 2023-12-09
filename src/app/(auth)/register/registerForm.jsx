@@ -7,10 +7,27 @@ const RegisterForm = () => {
   const [email, setemail] = useState(null);
   const [password, setpassword] = useState(null);
 
-  const handleSubmit = (eo) => {
+  const handleSubmit = async (eo) => {
     eo.preventDefault();
 
-    console.log({ name, email, password });
+   
+
+    const response = await fetch("api/register", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({ name, email, password }), // body data type must match "Content-Type" header
+    });
+
+
+    console.log(response)
+
+
+    if (response.ok) {
+      console.log("doneeeeeeeeeeeeeeeeeeeeeeeeeee")
+    }
   };
   return (
     <form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
