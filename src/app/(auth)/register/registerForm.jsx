@@ -30,6 +30,8 @@ const RegisterForm = () => {
     return
   }
 
+
+  
     // Store data in DataBase
     const response = await fetch("api/register", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
