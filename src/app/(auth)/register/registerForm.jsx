@@ -1,56 +1,69 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const RegisterForm = () => {
   const [name, setname] = useState(null);
   const [email, setemail] = useState(null);
   const [password, setpassword] = useState(null);
+  const [loading, setloading] = useState(false);
+
+  const [error, seterror] = useState(null);
+  const router = useRouter();
 
   const handleSubmit = async (eo) => {
     eo.preventDefault();
+    setloading(true)
+    seterror(null)
 
-   
+    if (!name || !email || !password) {
+      seterror("All input must be filled");
+      setloading(false)
+      return;
+    }
+
     // Check if email exist
-    const resUserExist= await fetch("api/userExist", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+    const resUserExist = await fetch("api/userExist", {
+      method: "POST", 
       headers: {
         "Content-Type": "application/json",
       },
-
-      body: JSON.stringify({  email }), // body data type must match "Content-Type" header
+      body: JSON.stringify({ email }),  
     });
+
+    const isUserExist = await resUserExist.json();
  
-  const isUserExist =  await resUserExist.json()
-  console.log("***************************************")
-  console.log(isUserExist.user)
 
-  if (isUserExist.user) {
-    console.log("email Already exist")
-    return
-  }
+    if (isUserExist.user) {
+      seterror("Email Already exist");
+      setloading(false)
+      return;
+    }
 
-
-  
     // Store data in DataBase
     const response = await fetch("api/register", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      method: "POST",  
       headers: {
         "Content-Type": "application/json",
       },
-
-      body: JSON.stringify({ name, email, password }), // body data type must match "Content-Type" header
+      body: JSON.stringify({ name, email, password }),
     });
 
-
-    console.log(response)
-
+ 
 
     if (response.ok) {
-      console.log("doneeeeeeeeeeeeeeeeeeeeeeeeeee")
-      eo.target.reset()
+      eo.target.reset();
+      router.push("/signin");
+    } else {
+      seterror("faild to create acoount, Please try again");
     }
+
+
+
+    setloading(false)
+
   };
+
   return (
     <form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
       <div className="mb-4">
@@ -95,19 +108,12 @@ const RegisterForm = () => {
           id="exampleInputPassword1"
         />
       </div>
-      <div className="mb-3 form-check">
-        <input
-          type="checkbox"
-          className="form-check-input"
-          id="exampleCheck1"
-        />
-        <label className="form-check-label" htmlFor="exampleCheck1">
-          Check me out
-        </label>
-      </div>
+ 
       <button type="submit" className="btn btn-primary">
-        Create Account
+       {loading? "Loading...." : "Create Account"} 
       </button>
+
+      <p style={{color: "#ff7790", fontSize: "1.1rem", marginTop: "1rem"}}> {error}</p>
     </form>
   );
 };
