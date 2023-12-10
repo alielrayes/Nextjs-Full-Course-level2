@@ -11,7 +11,26 @@ const RegisterForm = () => {
     eo.preventDefault();
 
    
+    // Check if email exist
+    const resUserExist= await fetch("api/userExist", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json",
+      },
 
+      body: JSON.stringify({  email }), // body data type must match "Content-Type" header
+    });
+ 
+  const isUserExist =  await resUserExist.json()
+  console.log("***************************************")
+  console.log(isUserExist.user)
+
+  if (isUserExist.user) {
+    console.log("email Already exist")
+    return
+  }
+
+    // Store data in DataBase
     const response = await fetch("api/register", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
