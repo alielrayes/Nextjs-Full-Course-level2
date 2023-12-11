@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 const RegisterForm = () => {
   const [name, setname] = useState(null);
@@ -13,55 +14,54 @@ const RegisterForm = () => {
 
   const handleSubmit = async (eo) => {
     eo.preventDefault();
-    setloading(true)
-    seterror(null)
+    setloading(true);
+    seterror(null);
 
     if (!name || !email || !password) {
       seterror("All input must be filled");
-      setloading(false)
+      toast.error("All input must be filled");
+      setloading(false);
       return;
     }
 
     // Check if email exist
     const resUserExist = await fetch("api/userExist", {
-      method: "POST", 
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email }),  
+      body: JSON.stringify({ email }),
     });
 
     const isUserExist = await resUserExist.json();
- 
 
     if (isUserExist.user) {
       seterror("Email Already exist");
-      setloading(false)
+      toast.error("Email Already exist");
+
+      setloading(false);
       return;
     }
 
     // Store data in DataBase
     const response = await fetch("api/register", {
-      method: "POST",  
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ name, email, password }),
     });
 
- 
-
     if (response.ok) {
+      toast.success("Your account has been created successfully");
       eo.target.reset();
+
       router.push("/signin");
     } else {
       seterror("faild to create acoount, Please try again");
     }
 
-
-
-    setloading(false)
-
+    setloading(false);
   };
 
   return (
@@ -86,6 +86,7 @@ const RegisterForm = () => {
           Email address
         </label>
         <input
+          required
           onChange={(eo) => {
             setemail(eo.target.value);
           }}
@@ -100,6 +101,7 @@ const RegisterForm = () => {
           Password
         </label>
         <input
+          required
           onChange={(eo) => {
             setpassword(eo.target.value);
           }}
@@ -108,12 +110,29 @@ const RegisterForm = () => {
           id="exampleInputPassword1"
         />
       </div>
- 
-      <button type="submit" className="btn btn-primary">
-       {loading? "Loading...." : "Create Account"} 
+
+      <button
+        disabled={!name || !email || !password}
+        type="submit"
+        className="btn btn-primary"
+      >
+        {loading ? (
+          <div
+            style={{ width: "1.5rem", height: "1.5rem" }}
+            className="spinner-border"
+            role="status"
+          >
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        ) : (
+          "Create Account"
+        )}
       </button>
 
-      <p style={{color: "#ff7790", fontSize: "1.1rem", marginTop: "1rem"}}> {error}</p>
+      <p style={{ color: "#ff7790", fontSize: "1.1rem", marginTop: "1rem" }}>
+        {" "}
+        {error}
+      </p>
     </form>
   );
 };
