@@ -22,7 +22,19 @@ const SigninForm = () => {
       redirect: false,
     });
 
-    setisLoading(false);
+    console.log(res)
+    if (!res.ok) {
+      seterror("invalid email or password");
+      setisLoading(false);
+      return
+    } else {
+
+      console.log("WELCOME ♥♥")
+      setisLoading(false);
+    }
+    
+
+  
   };
 
   return (
