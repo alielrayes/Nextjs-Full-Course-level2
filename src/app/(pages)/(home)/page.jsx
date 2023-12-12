@@ -1,5 +1,6 @@
 // @ts-nocheck
-
+"use client";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Suspense } from "react";
 import Footer from "../../../components/footer/footer.jsx";
 import Header from "../../../components/header/header.jsx";
@@ -9,12 +10,10 @@ import Loading from "./loading.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-
 export default function Home() {
+  const { data: session, status } = useSession();
   return (
     <>
-
-
       <div className="top-img">
         <Header />
         <section className="content">
@@ -39,9 +38,25 @@ export default function Home() {
           Recommended for you
         </h1>
 
-        <Suspense fallback={<Loading />}>
-          <Products />
-        </Suspense>
+        {status === "loading" && <Loading />}
+
+        {status == "unauthenticated" && (
+          <h3
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBlock: "4rem",
+            }}
+          >
+            You must be signed in to view the protected content on this page.
+          </h3>
+        )}
+
+        {status === "authenticated" && (
+          <Suspense fallback={<Loading />}>
+            <Products />
+          </Suspense>
+        )}
       </main>
 
       <Footer />

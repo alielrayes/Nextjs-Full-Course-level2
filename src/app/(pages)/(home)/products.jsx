@@ -31,6 +31,7 @@ async function getData() {
 }
 
 const Products = async () => {
+
   const arrData = await getData();
 
   return (

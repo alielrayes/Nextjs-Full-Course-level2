@@ -89,29 +89,8 @@ const SigninForm = () => {
         {error}
       </p>
 
-      {status}
-      <br />
+   
  
-
-{status === "authenticated" && ( 
-
-<div>
-  <p>Signed in as {session.user.email}</p>
-  <p>Signed in as {session.user.name}</p>
-  
-  
-</div>
-
-)   }
-<br />
-<br />
-
-
-{status === "authenticated" && (
-  <button onClick={() => {
-    signOut()
-  }} className="btn btn-danger">sign out</button>
-)}
       
     </form>
   );
