@@ -2,6 +2,7 @@ import UserModal from "app/DBconfig/models/user";
 import { connectMongoDB } from "app/DBconfig/mongoDB";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
 
 export const authOptions = {
   providers: [
@@ -9,19 +10,23 @@ export const authOptions = {
       name: "Credentials",
 
       credentials: {},
-      async authorize(credentials, req) {
-        console.log(
-          "***********************     credentials    *********************************"
-        );
-        console.log(credentials);
+
+      async authorize(credentials, req, res) {
         await connectMongoDB();
         const user = await UserModal.findOne({
-          // @ts-ignore
           email: credentials.email,
         });
 
         if (user) {
-          return user;
+          const match = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+          if (match) {
+            return user;
+          } else {
+            return null;
+          }
         } else {
           return null;
         }
