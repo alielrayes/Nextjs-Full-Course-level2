@@ -5,6 +5,7 @@ import "../globals.css";
 import "./auth.css";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import AuthProvider from "app/providers/AuthProvider";
 
 
 
@@ -26,7 +27,11 @@ export default function RootLayout({ children }) {
         }}
         className="text-center text-bg-dark auth-pages"
       >
-        {children}
+
+
+
+<AuthProvider>
+{children}
         <Footer />
 
         <ToastContainer
@@ -41,6 +46,13 @@ export default function RootLayout({ children }) {
           pauseOnHover
           theme="light"
         />
+
+
+
+</AuthProvider>
+
+
+
       </body>
     </html>
   );

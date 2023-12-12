@@ -1,9 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const SigninForm = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter()
+
   const [email, setemail] = useState(null);
   const [password, setpassword] = useState(null);
   const [isLoading, setisLoading] = useState(false);
@@ -22,19 +25,15 @@ const SigninForm = () => {
       redirect: false,
     });
 
-    console.log(res)
+    console.log(res);
     if (!res.ok) {
       seterror("invalid email or password");
       setisLoading(false);
-      return
+      return;
     } else {
-
-      console.log("WELCOME ♥♥")
+      router.replace("/")
       setisLoading(false);
     }
-    
-
-  
   };
 
   return (
@@ -89,6 +88,31 @@ const SigninForm = () => {
         {" "}
         {error}
       </p>
+
+      {status}
+      <br />
+ 
+
+{status === "authenticated" && ( 
+
+<div>
+  <p>Signed in as {session.user.email}</p>
+  <p>Signed in as {session.user.name}</p>
+  
+  
+</div>
+
+)   }
+<br />
+<br />
+
+
+{status === "authenticated" && (
+  <button onClick={() => {
+    signOut()
+  }} className="btn btn-danger">sign out</button>
+)}
+      
     </form>
   );
 };
