@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 const RegisterForm = () => {
+const [isRed, setisRed] = useState(false);
+
   const [name, setname] = useState(null);
   const [email, setemail] = useState(null);
   const [password, setpassword] = useState(null);
@@ -16,6 +18,7 @@ const RegisterForm = () => {
     eo.preventDefault();
     setloading(true);
     seterror(null);
+    setisRed(false)
 
     if (!name || !email || !password) {
       seterror("All input must be filled");
@@ -28,6 +31,7 @@ const RegisterForm = () => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
 
     if (!regPassword.test(password)) {
+      setisRed(true)
       setloading(false);
       seterror(
         "Password must be at least 8 characters with 1 uppercase, 1 lowercase, 1 special character and 1 numeric."
@@ -112,6 +116,7 @@ const RegisterForm = () => {
           Password
         </label>
         <input
+        style={{backgroundColor: isRed?   "#fcaaaa" : null}}
           required
           onChange={(eo) => {
             setpassword(eo.target.value);
