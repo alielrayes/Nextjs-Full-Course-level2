@@ -24,6 +24,17 @@ const RegisterForm = () => {
       return;
     }
 
+    const regPassword =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+
+    if (!regPassword.test(password)) {
+      setloading(false);
+      seterror(
+        "Password must be at least 8 characters with 1 uppercase, 1 lowercase, 1 special character and 1 numeric."
+      );
+      return;
+    }
+
     // Check if email exist
     const resUserExist = await fetch("api/userExist", {
       method: "POST",
